@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
+import vaultRoutes from './routes/vaultRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -37,6 +38,7 @@ app.use('/api', limiter);
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/vault', vaultRoutes);
 
 // Basic Health Check Route
 app.get('/api/health', (req: Request, res: Response) => {
