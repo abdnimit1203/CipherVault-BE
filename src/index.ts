@@ -4,9 +4,14 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import connectDB from './config/db';
+import authRoutes from './routes/authRoutes';
 
 // Load environment variables
 dotenv.config();
+
+// Connect to Database
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +34,9 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 app.use('/api', limiter);
+
+// Routes
+app.use('/api/auth', authRoutes);
 
 // Basic Health Check Route
 app.get('/api/health', (req: Request, res: Response) => {
