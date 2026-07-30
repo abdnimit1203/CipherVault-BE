@@ -47,6 +47,6 @@ const vaultItemSchema = new Schema<IVaultItem>({
 // Index to quickly fetch a user's vault items
 vaultItemSchema.index({ userId: 1 });
 
-const VaultItem = mongoose.models.VaultItem || mongoose.model<IVaultItem>('VaultItem', vaultItemSchema);
+const VaultItem = (mongoose.models.VaultItem || mongoose.model<IVaultItem>('VaultItem', vaultItemSchema)) as any;
 
 export default VaultItem;
