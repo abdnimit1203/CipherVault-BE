@@ -65,6 +65,12 @@ app.use('/api', limiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/vault', vaultRoutes);
 
+// Global Error Handler for Vercel Serverless
+app.use((err: any, req: Request, res: Response, next: any) => {
+  console.error('Unhandled API Error:', err);
+  res.status(500).json({ error: err?.message || 'Internal Server Error' });
+});
+
 // Start Server in local dev
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   connectDB().then(() => {
