@@ -10,8 +10,8 @@ if (getApps().length === 0) {
       credential: cert({
         projectId: process.env.FIREBASE_PROJECT_ID as string,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL as string,
-        // Replace escaped newlines if they exist
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') as string,
+        // Strip outer quotes if present and replace escaped newlines
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/^"|"$/g, '').replace(/\\n/g, '\n') as string,
       }),
     });
     console.log('Firebase Admin Initialized');
