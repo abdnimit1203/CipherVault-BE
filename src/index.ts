@@ -14,11 +14,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Basic Health Check Route (placed first for instant response)
-app.get('/api/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'success', message: 'CipherVault API is running.' });
-});
-
 // Middleware
 app.use(helmet());
 app.use(cors({
@@ -33,6 +28,15 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(morgan('dev'));
+
+// Basic Health Check Routes (matching all variations)
+const healthHandler = (req: Request, res: Response) => {
+  res.status(200).json({ status: 'success', message: 'CipherVault API is running.' });
+};
+
+app.get('/', healthHandler);
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
 
 // Rate Limiting
 const limiter = rateLimit({

@@ -4,25 +4,48 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-if (getApps().length === 0) {
+let isFirebaseInitialized = false;
+
+function initFirebase() {
+  if (getApps().length > 0) {
+    isFirebaseInitialized = true;
+    return;
+  }
+
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const rawKey = process.env.FIREBASE_PRIVATE_KEY;
+
+  if (!projectId || !clientEmail || !rawKey) {
+    console.warn('Firebase environment variables missing or incomplete.');
+    return;
+  }
+
   try {
+    const privateKey = rawKey.replace(/^"|"$/g, '').replace(/\\n/g, '\n');
     initializeApp({
       credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID as string,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL as string,
-        // Strip outer quotes if present and replace escaped newlines
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/^"|"$/g, '').replace(/\\n/g, '\n') as string,
+        projectId,
+        clientEmail,
+        privateKey,
       }),
     });
-    console.log('Firebase Admin Initialized');
+    isFirebaseInitialized = true;
+    console.log('Firebase Admin Initialized Successfully');
   } catch (error: any) {
     console.error('Firebase Admin Initialization Error:', error.message);
   }
 }
 
-// Export a proxy object to keep backward compatibility with `admin.auth()` calls
+initFirebase();
+
 const admin = {
-  auth: () => getAuth()
+  auth: () => {
+    if (!isFirebaseInitialized && getApps().length === 0) {
+      initFirebase();
+    }
+    return getAuth();
+  }
 };
 
 export default admin;
