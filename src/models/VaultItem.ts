@@ -3,7 +3,8 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IVaultItem extends Document {
   userId: mongoose.Types.ObjectId;
   title: string;
-  category: string;
+  category?: string;
+  owner: 'Personal' | 'Family' | 'Friend' | 'Other';
   encryptedData: string;
   iv: string;
   createdAt: Date;
@@ -23,9 +24,13 @@ const vaultItemSchema = new Schema<IVaultItem>({
   },
   category: {
     type: String,
-    required: true,
     trim: true,
-    default: 'Uncategorized'
+    default: 'General'
+  },
+  owner: {
+    type: String,
+    enum: ['Personal', 'Family', 'Friend', 'Other'],
+    default: 'Personal'
   },
   encryptedData: {
     type: String,
