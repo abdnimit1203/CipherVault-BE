@@ -4,8 +4,7 @@ import User from '../models/User';
 import { AuthRequest } from '../middlewares/authMiddleware';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'ciphervault_super_secret_jwt_key_30d';
+import JWT_SECRET from '../config/jwtSecret';
 
 // @route POST /api/auth/register
 // @desc Create or sync user in MongoDB after signing in via Firebase / Google Auth

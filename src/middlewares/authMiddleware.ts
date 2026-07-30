@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import admin from '../config/firebase';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
+import JWT_SECRET from '../config/jwtSecret';
 
 export interface AuthRequest extends Request {
   user?: any;
@@ -16,7 +17,6 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const JWT_SECRET = process.env.JWT_SECRET || 'ciphervault_super_secret_jwt_key_30d';
 
     // 1. Try verifying custom 30-day JWT token first
     try {
