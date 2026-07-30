@@ -53,7 +53,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 });
 
 // Start Server
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
